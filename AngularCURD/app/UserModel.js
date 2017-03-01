@@ -1,6 +1,6 @@
 ﻿angular.module("UserModel", ["ngResource", "ngAngularTable"]).factory("UserModel", function ($http, $resource, AngularTable) {
     var main = this;
-    //restfullapi 接口 使用微软odata web api 
+    //restfulapi 接口 使用微软odata web api 
     var userSevice = $resource('/odata/ApiUser(:userId)', { userId: '@id' }, { 'query': { method: 'GET' } });
 
 
