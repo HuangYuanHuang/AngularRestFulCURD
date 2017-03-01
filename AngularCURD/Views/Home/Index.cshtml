@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="panel panel-default" ng-app="app" ng-controller="mainController">
+    <!-- Default panel contents -->
+    <div class="panel-heading"><button type="button" class="btn btn-primary" ng-click="Model.addUser()">添加新用户</button></div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <div class="form-group col-md-6">
+                <label class="col-sm-2 control-label">用户名</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" placeholder="请输入用户名" ng-model="Model.Search.userName">
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="col-sm-2 control-label">邮箱</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" placeholder="请输入电子邮箱" ng-model="Model.Search.email">
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="col-sm-2 control-label">角色</label>
+                <div class="col-sm-10">
+                    <select class="form-control" ng-model="Model.Search.role">
+                        <option value="">All</option>
+                        <option value="Admin">Admin</option>
+                        <option value="User">User</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="col-sm-2 control-label">状态</label>
+                <div class="col-sm-10">
+                    <select class="form-control" ng-model="Model.Search.status">
+                        <option value="">All</option>
+                        <option value="Enable">Enable</option>
+                        <option value="Disable">Disable</option>
+                    </select>
+                </div>
+            </div>
+            
+        </form>
+       
+    </div>
+  
+    <!-- Table -->
+    <table class="table">
+        <thead>
+            <tr>
+                <td>用户ID</td>
+                <td>用户名</td>
+                <td>邮箱</td>
+                <td>角色</td>
+                <td>年龄</td>
+                <td>状态</td>
+                <td>创建时间</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in Model.nodes|filter:{userName:Model.Search.userName,email:Model.Search.email,role:Model.Search.role,status:Model.Search.status}">
+                <td>{{item.userId}}</td>
+                <td>{{item.userName}}</td>
+                <td>{{item.email}}</td>
+                <td>{{item.role}}</td>
+                <td>{{item.age}}</td>
+                <td>{{item.status}}</td>
+                <td>{{item.time}}</td>
+                <td>
+                    <div class="btn-group-sm" role="group" aria-label="...">
+                        <button type="button" class="btn btn-info" ng-click="item.edit()">编辑</button>
+                        <button type="button" class="btn btn-danger" ng-click="item.remove()">删除</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div class="row">
+        <div class="text-left col-md-4" style="margin-top:20px;">
+            <pre>总记录数:{{Grid.dataLength}} 当前第{{Grid.pageNumber}}页  共{{Grid.pageTotal()}}页</pre>
+
+        </div>
+        <div class="text-right col-md-8">
+            <ul uib-pagination boundary-links="true" items-per-page="Grid.pageSize" max-size="5" total-items="Grid.dataLength" ng-model="Grid.pageNumber" ng-change="Grid.pageChanged()" class="pagination-sm text-right" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{{Model.Edit.userName}}编辑</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" placeholder="请输入用户名" ng-model="Model.Edit.userName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">邮箱</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" placeholder="请输入电子邮件" ng-model="Model.Edit.email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">年龄</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" placeholder="请输入用户年龄" ng-model="Model.Edit.age">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">角色</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" ng-model="Model.Edit.role">
+                                    <option>Admin</option>
+                                    <option>User</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">状态</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" ng-model="Model.Edit.status">
+                                    <option>Enable</option>
+                                    <option>Disable</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" ng-click="Model.Edit.save()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/angular-resource.js"></script>
+<script src="~/app/UserModel.js"></script>
+<script src="~/angularUI/angular-ui-bootstrap.js"></script>
+<script src="~/app/AngularTable.js"></script>
+<script type="text/javascript">
+    angular.module("app", ["UserModel", "ui.bootstrap"]).controller("mainController", function ($scope, UserModel, $log, AngularTable) {
+
+        $scope.Model = UserModel;
+        $scope.Grid = AngularTable;
+        UserModel.init();
+
+    });
+</script>
